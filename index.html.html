@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f0f0f" />
+  <title>Minhas Listas</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f0f0f;
+      --bg2: #1a1a1a;
+      --bg3: #242424;
+      --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.14);
+      --text: #f0ece4;
+      --text2: rgba(240,236,228,0.5);
+      --text3: rgba(240,236,228,0.25);
+      --accent-tarefas: #c8f56a;
+      --accent-compras: #6af5c2;
+      --accent-trabalho: #f5a66a;
+      --radius: 14px;
+      --radius-sm: 8px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      padding: 0 0 80px;
+    }
+
+    header {
+      padding: 56px 24px 0;
+      margin-bottom: 32px;
+    }
+
+    header h1 {
+      font-size: 28px;
+      font-weight: 300;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+
+    header p {
+      font-size: 13px;
+      color: var(--text3);
+      margin-top: 4px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .abas {
+      display: flex;
+      gap: 8px;
+      padding: 0 24px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .abas::-webkit-scrollbar { display: none; }
+
+    .aba-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text2);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .aba-btn .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.4;
+    }
+
+    .aba-btn.ativa {
+      border-color: transparent;
+      color: #0f0f0f;
+      font-weight: 500;
+    }
+
+    .aba-btn.ativa[data-aba="tarefas"] { background: var(--accent-tarefas); }
+    .aba-btn.ativa[data-aba="compras"] { background: var(--accent-compras); }
+    .aba-btn.ativa[data-aba="trabalho"] { background: var(--accent-trabalho); }
+    .aba-btn.ativa .dot { opacity: 1; background: rgba(0,0,0,0.3); }
+
+    .input-area {
+      padding: 0 24px;
+      margin-bottom: 24px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .input-area input {
+      flex: 1;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .input-area input::placeholder { color: var(--text3); }
+    .input-area input:focus { border-color: var(--border2); }
+
+    .input-area button {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius);
+      border: none;
+      background: var(--bg3);
+      color: var(--text);
+      font-size: 22px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, transform 0.1s;
+      flex-shrink: 0;
+    }
+    .input-area button:active { transform: scale(0.93); }
+
+    .lista { padding: 0 24px; }
+
+    .vazio {
+      text-align: center;
+      color: var(--text3);
+      font-size: 14px;
+      padding: 48px 0;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      margin-bottom: 8px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .item:active { background: var(--bg3); }
+
+    .check {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border2);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .check.quadrado { border-radius: 6px; }
+    .check.retangulo { border-radius: 4px; }
+
+    .check.feito { border-color: transparent; }
+    .feito-tarefas .check.feito { background: var(--accent-tarefas); }
+    .feito-compras .check.feito { background: var(--accent-compras); }
+    .feito-trabalho .check.feito { background: var(--accent-trabalho); }
+
+    .check svg { display: none; }
+    .check.feito svg { display: block; }
+
+    .item-texto {
+      flex: 1;
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.4;
+      transition: color 0.15s;
+    }
+
+    .item.feito-tarefas .item-texto,
+    .item.feito-compras .item-texto,
+    .item.feito-trabalho .item-texto {
+      color: var(--text3);
+      text-decoration: line-through;
+    }
+
+    .remover {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      border-radius: 6px;
+      transition: opacity 0.15s;
+      color: var(--text3);
+    }
+
+    .item:hover .remover,
+    .item:focus-within .remover { opacity: 1; }
+
+    @media (hover: none) {
+      .remover { opacity: 0.4; }
+    }
+
+    .rodape {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px 0;
+      border-top: 1px solid var(--border);
+      margin-top: 16px;
+    }
+
+    .rodape span {
+      font-size: 12px;
+      color: var(--text3);
+      font-family: 'DM Mono', monospace;
+    }
+
+    .rodape button {
+      font-size: 12px;
+      color: var(--text3);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      padding: 4px 8px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      color: var(--text2);
+      font-size: 13px;
+      padding: 8px 18px;
+      border-radius: 100px;
+      font-family: 'DM Mono', monospace;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .toast.visivel {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Minhas listas</h1>
+  <p id="data-hoje"></p>
+</header>
+
+<div class="abas">
+  <button class="aba-btn ativa" data-aba="tarefas" onclick="trocarAba('tarefas')">
+    <span class="dot"></span> Tarefas
+  </button>
+  <button class="aba-btn" data-aba="compras" onclick="trocarAba('compras')">
+    <span class="dot"></span> Compras
+  </button>
+  <button class="aba-btn" data-aba="trabalho" onclick="trocarAba('trabalho')">
+    <span class="dot"></span> Trabalho
+  </button>
+</div>
+
+<div class="input-area">
+  <input type="text" id="input-item" placeholder="O que precisa ser feito?" />
+  <button onclick="adicionarItem()">+</button>
+</div>
+
+<div class="lista" id="lista"></div>
+<div class="toast" id="toast">Salvo</div>
+
+<script>
+  const meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  const hoje = new Date();
+  document.getElementById('data-hoje').textContent =
+    hoje.getDate() + ' ' + meses[hoje.getMonth()] + ' ' + hoje.getFullYear();
+
+  function carregarDados() {
+    try {
+      const s = localStorage.getItem('minhas-listas-v2');
+      if (s) return JSON.parse(s);
+    } catch(e) {}
+    return { tarefas: [], compras: [], trabalho: [] };
+  }
+
+  let dados = carregarDados();
+  let abaAtual = 'tarefas';
+  let timerToast;
+
+  const placeholders = {
+    tarefas: 'O que precisa ser feito?',
+    compras: 'O que precisa comprar?',
+    trabalho: 'Qual tarefa de trabalho?'
+  };
+
+  function salvar() {
+    try { localStorage.setItem('minhas-listas-v2', JSON.stringify(dados)); } catch(e) {}
+    const t = document.getElementById('toast');
+    t.classList.add('visivel');
+    clearTimeout(timerToast);
+    timerToast = setTimeout(() => t.classList.remove('visivel'), 1400);
+  }
+
+  function trocarAba(aba) {
+    abaAtual = aba;
+    document.getElementById('input-item').placeholder = placeholders[aba];
+    document.querySelectorAll('.aba-btn').forEach(b => {
+      b.classList.toggle('ativa', b.dataset.aba === aba);
+    });
+    renderizar();
+  }
+
+  function adicionarItem() {
+    const input = document.getElementById('input-item');
+    const texto = input.value.trim();
+    if (!texto) return;
+    dados[abaAtual].push({ texto, feito: false, id: Date.now() });
+    input.value = '';
+    salvar();
+    renderizar();
+    input.focus();
+  }
+
+  function toggleItem(id) {
+    const item = dados[abaAtual].find(i => i.id === id);
+    if (item) item.feito = !item.feito;
+    salvar();
+    renderizar();
+  }
+
+  function removerItem(e, id) {
+    e.stopPropagation();
+    dados[abaAtual] = dados[abaAtual].filter(i => i.id !== id);
+    salvar();
+    renderizar();
+  }
+
+  function limparConcluidas() {
+    dados[abaAtual] = dados[abaAtual].filter(i => !i.feito);
+    salvar();
+    renderizar();
+  }
+
+  const formas = { tarefas: '', compras: ' quadrado', trabalho: ' retangulo' };
+
+  function renderizar() {
+    const el = document.getElementById('lista');
+    const items = dados[abaAtual];
+
+    if (items.length === 0) {
+      el.innerHTML = `<p class="vazio">— lista vazia —</p>`;
+      return;
+    }
+
+    const pendentes = items.filter(i => !i.feito).length;
+    const feitaClass = 'feito-' + abaAtual;
+
+    el.innerHTML = items.map(item => `
+      <div class="item ${item.feito ? feitaClass : ''}" onclick="toggleItem(${item.id})">
+        <div class="check${formas[abaAtual]}${item.feito ? ' feito' : ''}">
+          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+            <polyline points="1,4.5 4,7.5 10,1" stroke="#0f0f0f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="item-texto">${item.texto}</span>
+        <div class="remover" onclick="removerItem(event, ${item.id})">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <line x1="2" y1="2" x2="12" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="12" y1="2" x2="2" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+    `).join('');
+
+    el.innerHTML += `
+      <div class="rodape">
+        <span>${pendentes === 0 ? 'tudo feito!' : pendentes + ' pendente' + (pendentes > 1 ? 's' : '')}</span>
+        ${items.some(i => i.feito) ? '<button onclick="limparConcluidas()">limpar concluídas</button>' : ''}
+      </div>`;
+  }
+
+  document.getElementById('input-item').addEventListener('keydown', e => {
+    if (e.key === 'Enter') adicionarItem();
+  });
+
+  renderizar();
+</script>
+</body>
+</html>
