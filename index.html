@@ -218,6 +218,24 @@
     }
     .icon-btn:hover { background: var(--bg3); color: var(--text2); }
 
+    /* DRAG & DROP */
+    .drag-handle {
+      width: 24px; height: 30px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: grab; color: var(--text3);
+      flex-shrink: 0;
+      touch-action: none;
+    }
+    .drag-handle:active { cursor: grabbing; }
+    .item.arrastando {
+      opacity: 0.4;
+      border: 1px dashed var(--border2);
+    }
+    .item.sobre {
+      border-color: var(--border2);
+      background: var(--bg3);
+    }
+
     /* CORPO EXPANSÍVEL */
     .item-body {
       border-top: 1px solid var(--border);
@@ -460,7 +478,100 @@
     if (item) { item.desc = el.value; salvar(); }
   }
 
-  function limparConcluidas() {
+  let dragSrcId = null;
+
+  function onDragStart(e, id) {
+    dragSrcId = id;
+    e.dataTransfer.effectAllowed = 'move';
+    setTimeout(() => {
+      const el = document.querySelector(`.item[data-id="${id}"]`);
+      if (el) el.classList.add('arrastando');
+    }, 0);
+  }
+
+  function onDragOver(e, id) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    document.querySelectorAll('.item').forEach(el => el.classList.remove('sobre'));
+    const el = document.querySelector(`.item[data-id="${id}"]`);
+    if (el && id !== dragSrcId) el.classList.add('sobre');
+  }
+
+  function onDrop(e, id) {
+    e.preventDefault();
+    if (dragSrcId === null || dragSrcId === id) return;
+    const lista = dados[abaAtual];
+    const fromIdx = lista.findIndex(i => i.id === dragSrcId);
+    const toIdx   = lista.findIndex(i => i.id === id);
+    if (fromIdx < 0 || toIdx < 0) return;
+    const [moved] = lista.splice(fromIdx, 1);
+    lista.splice(toIdx, 0, moved);
+    dragSrcId = null;
+    salvar(); renderizar();
+  }
+
+  function onDragEnd() {
+    dragSrcId = null;
+    document.querySelectorAll('.item').forEach(el => {
+      el.classList.remove('arrastando', 'sobre');
+    });
+  }
+
+  // Touch drag (mobile)
+  let touchDragId = null;
+  let touchClone = null;
+  let touchOffsetY = 0;
+
+  function onTouchStart(e, id) {
+    touchDragId = id;
+    const touch = e.touches[0];
+    const el = document.querySelector(`.item[data-id="${id}"]`);
+    const rect = el.getBoundingClientRect();
+    touchOffsetY = touch.clientY - rect.top;
+    touchClone = el.cloneNode(true);
+    touchClone.style.cssText = `position:fixed;left:${rect.left}px;top:${rect.top}px;width:${rect.width}px;opacity:0.85;pointer-events:none;z-index:1000;border-radius:14px;background:var(--bg3);border:1px solid var(--border2);`;
+    document.body.appendChild(touchClone);
+    el.classList.add('arrastando');
+  }
+
+  function onTouchMove(e) {
+    if (!touchDragId) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    if (touchClone) touchClone.style.top = (touch.clientY - touchOffsetY) + 'px';
+    document.querySelectorAll('.item').forEach(el => el.classList.remove('sobre'));
+    const target = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.item');
+    if (target && target.dataset.id && parseInt(target.dataset.id) !== touchDragId) {
+      target.classList.add('sobre');
+    }
+  }
+
+  function onTouchEnd(e) {
+    if (!touchDragId) return;
+    const touch = e.changedTouches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.item');
+    if (target && target.dataset.id) {
+      const toId = parseInt(target.dataset.id);
+      if (toId !== touchDragId) {
+        const lista = dados[abaAtual];
+        const fromIdx = lista.findIndex(i => i.id === touchDragId);
+        const toIdx   = lista.findIndex(i => i.id === toId);
+        if (fromIdx >= 0 && toIdx >= 0) {
+          const [moved] = lista.splice(fromIdx, 1);
+          lista.splice(toIdx, 0, moved);
+          salvar();
+        }
+      }
+    }
+    if (touchClone) { touchClone.remove(); touchClone = null; }
+    touchDragId = null;
+    renderizar();
+  }
+
+  document.addEventListener('touchmove', onTouchMove, { passive: false });
+  document.addEventListener('touchend', onTouchEnd);
+
+
     dados[abaAtual] = dados[abaAtual].filter(i => !i.feito);
     salvar(); renderizar();
   }
