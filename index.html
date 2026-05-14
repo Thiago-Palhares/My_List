@@ -21,8 +21,8 @@
       --accent-tarefas: #c8f56a;
       --accent-compras: #6af5c2;
       --accent-trabalho: #f5a66a;
+      --success: #a5d6a7;
       --radius: 14px;
-      --radius-sm: 8px;
     }
 
     body {
@@ -34,29 +34,29 @@
     }
 
     header {
-      padding: 56px 24px 0;
-      margin-bottom: 32px;
+      padding: 52px 24px 0;
+      margin-bottom: 28px;
     }
 
     header h1 {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 300;
       letter-spacing: -0.5px;
-      color: var(--text);
     }
 
     header p {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--text3);
       margin-top: 4px;
       font-family: 'DM Mono', monospace;
     }
 
+    /* ABAS */
     .abas {
       display: flex;
       gap: 8px;
       padding: 0 24px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       overflow-x: auto;
       scrollbar-width: none;
     }
@@ -75,31 +75,26 @@
       font-size: 13px;
       cursor: pointer;
       white-space: nowrap;
-      transition: all 0.15s ease;
+      transition: all 0.15s;
     }
 
     .aba-btn .dot {
-      width: 6px;
-      height: 6px;
+      width: 6px; height: 6px;
       border-radius: 50%;
       background: currentColor;
       opacity: 0.4;
     }
 
-    .aba-btn.ativa {
-      border-color: transparent;
-      color: #0f0f0f;
-      font-weight: 500;
-    }
-
+    .aba-btn.ativa { border-color: transparent; color: #0f0f0f; font-weight: 500; }
+    .aba-btn.ativa .dot { opacity: 1; background: rgba(0,0,0,0.3); }
     .aba-btn.ativa[data-aba="tarefas"] { background: var(--accent-tarefas); }
     .aba-btn.ativa[data-aba="compras"] { background: var(--accent-compras); }
     .aba-btn.ativa[data-aba="trabalho"] { background: var(--accent-trabalho); }
-    .aba-btn.ativa .dot { opacity: 1; background: rgba(0,0,0,0.3); }
 
+    /* INPUT */
     .input-area {
       padding: 0 24px;
-      margin-bottom: 24px;
+      margin-bottom: 12px;
       display: flex;
       gap: 10px;
     }
@@ -109,132 +104,192 @@
       background: var(--bg2);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 14px 16px;
+      padding: 13px 16px;
       color: var(--text);
       font-family: 'DM Sans', sans-serif;
       font-size: 15px;
       outline: none;
       transition: border-color 0.15s;
     }
-
     .input-area input::placeholder { color: var(--text3); }
     .input-area input:focus { border-color: var(--border2); }
 
     .input-area button {
-      width: 52px;
-      height: 52px;
+      width: 50px; height: 50px;
       border-radius: var(--radius);
       border: none;
       background: var(--bg3);
       color: var(--text);
       font-size: 22px;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.15s, transform 0.1s;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.1s;
       flex-shrink: 0;
     }
-    .input-area button:active { transform: scale(0.93); }
+    .input-area button:active { transform: scale(0.92); }
 
+    /* PRIORIDADE */
+    .prio-seletor {
+      display: flex;
+      gap: 8px;
+      padding: 0 24px;
+      margin-bottom: 20px;
+    }
+
+    .prio-btn {
+      flex: 1;
+      padding: 7px 0;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: transparent;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text2);
+      transition: all 0.15s;
+    }
+    .prio-btn.sel-baixa { background: #1a2e1a; border-color: #2e5c2e; color: #7ec87e; }
+    .prio-btn.sel-media { background: #2e2600; border-color: #5c4d00; color: #d4b84a; }
+    .prio-btn.sel-alta  { background: #2e1a1a; border-color: #5c2e2e; color: #c87e7e; }
+
+    /* LISTA */
     .lista { padding: 0 24px; }
 
     .vazio {
       text-align: center;
       color: var(--text3);
-      font-size: 14px;
+      font-size: 13px;
       padding: 48px 0;
       font-family: 'DM Mono', monospace;
     }
 
     .item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 16px;
-      margin-bottom: 8px;
-      background: var(--bg2);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      cursor: pointer;
-      transition: background 0.15s;
-      -webkit-tap-highlight-color: transparent;
+      margin-bottom: 8px;
+      background: var(--bg2);
+      overflow: hidden;
     }
 
-    .item:active { background: var(--bg3); }
+    .item-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+    }
 
     .check {
-      width: 22px;
-      height: 22px;
+      width: 20px; height: 20px;
       border-radius: 50%;
       border: 1.5px solid var(--border2);
       flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
       transition: all 0.15s;
     }
+    .check.quadrado { border-radius: 5px; }
+    .check.feito { border-color: transparent; background: #2e5c2e; }
 
-    .check.quadrado { border-radius: 6px; }
-    .check.retangulo { border-radius: 4px; }
+    .item-info { flex: 1; min-width: 0; cursor: pointer; }
+    .item-titulo { font-size: 14px; color: var(--text); line-height: 1.4; }
+    .item-titulo.riscado { text-decoration: line-through; color: var(--text3); }
 
-    .check.feito { border-color: transparent; }
-    .feito-tarefas .check.feito { background: var(--accent-tarefas); }
-    .feito-compras .check.feito { background: var(--accent-compras); }
-    .feito-trabalho .check.feito { background: var(--accent-trabalho); }
+    .prio-badge {
+      font-size: 10px;
+      padding: 1px 8px;
+      border-radius: 100px;
+      margin-top: 4px;
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+    }
+    .prio-badge.baixa { background: #1a2e1a; color: #7ec87e; }
+    .prio-badge.media { background: #2e2600; color: #d4b84a; }
+    .prio-badge.alta  { background: #2e1a1a; color: #c87e7e; }
 
-    .check svg { display: none; }
-    .check.feito svg { display: block; }
+    .acoes { display: flex; gap: 2px; flex-shrink: 0; }
+    .icon-btn {
+      width: 30px; height: 30px;
+      border: none; background: transparent;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 8px;
+      color: var(--text3);
+      transition: all 0.15s;
+    }
+    .icon-btn:hover { background: var(--bg3); color: var(--text2); }
 
-    .item-texto {
-      flex: 1;
-      font-size: 15px;
+    /* CORPO EXPANSÍVEL */
+    .item-body {
+      border-top: 1px solid var(--border);
+      padding: 12px 14px;
+      display: none;
+    }
+    .item-body.aberto { display: block; }
+
+    .edit-field {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
       color: var(--text);
-      line-height: 1.4;
-      transition: color 0.15s;
+      outline: none;
+      margin-bottom: 8px;
     }
 
-    .item.feito-tarefas .item-texto,
-    .item.feito-compras .item-texto,
-    .item.feito-trabalho .item-texto {
+    .edit-acoes { display: flex; gap: 8px; }
+    .edit-acoes button {
+      padding: 5px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border2);
+      background: var(--bg3);
+      color: var(--text2);
+      font-size: 12px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .edit-acoes button:first-child { color: var(--accent-tarefas); border-color: var(--accent-tarefas); }
+
+    .desc-label {
+      font-size: 11px;
       color: var(--text3);
-      text-decoration: line-through;
+      font-family: 'DM Mono', monospace;
+      margin-bottom: 6px;
     }
 
-    .remover {
-      width: 28px;
-      height: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      border-radius: 6px;
-      transition: opacity 0.15s;
-      color: var(--text3);
+    .desc-field {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text2);
+      resize: vertical;
+      min-height: 70px;
+      outline: none;
+      transition: border-color 0.15s;
     }
+    .desc-field:focus { border-color: var(--border2); }
+    .desc-field::placeholder { color: var(--text3); }
 
-    .item:hover .remover,
-    .item:focus-within .remover { opacity: 1; }
-
-    @media (hover: none) {
-      .remover { opacity: 0.4; }
-    }
-
+    /* RODAPÉ */
     .rodape {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 24px 0;
-      border-top: 1px solid var(--border);
       margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
     }
-
     .rodape span {
       font-size: 12px;
       color: var(--text3);
       font-family: 'DM Mono', monospace;
     }
-
     .rodape button {
       font-size: 12px;
       color: var(--text3);
@@ -242,31 +297,26 @@
       border: none;
       cursor: pointer;
       font-family: 'DM Sans', sans-serif;
-      padding: 4px 8px;
     }
 
+    /* TOAST */
     .toast {
       position: fixed;
       bottom: 24px;
       left: 50%;
-      transform: translateX(-50%) translateY(20px);
+      transform: translateX(-50%) translateY(16px);
       background: var(--bg3);
       border: 1px solid var(--border2);
       color: var(--text2);
-      font-size: 13px;
-      padding: 8px 18px;
+      font-size: 12px;
+      padding: 7px 18px;
       border-radius: 100px;
       font-family: 'DM Mono', monospace;
       opacity: 0;
       transition: opacity 0.2s, transform 0.2s;
       pointer-events: none;
-      white-space: nowrap;
     }
-
-    .toast.visivel {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
+    .toast.visivel { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
@@ -277,20 +327,20 @@
 </header>
 
 <div class="abas">
-  <button class="aba-btn ativa" data-aba="tarefas" onclick="trocarAba('tarefas')">
-    <span class="dot"></span> Tarefas
-  </button>
-  <button class="aba-btn" data-aba="compras" onclick="trocarAba('compras')">
-    <span class="dot"></span> Compras
-  </button>
-  <button class="aba-btn" data-aba="trabalho" onclick="trocarAba('trabalho')">
-    <span class="dot"></span> Trabalho
-  </button>
+  <button class="aba-btn ativa" data-aba="tarefas" onclick="trocarAba('tarefas')"><span class="dot"></span>Tarefas</button>
+  <button class="aba-btn" data-aba="compras" onclick="trocarAba('compras')"><span class="dot"></span>Compras</button>
+  <button class="aba-btn" data-aba="trabalho" onclick="trocarAba('trabalho')"><span class="dot"></span>Trabalho</button>
 </div>
 
 <div class="input-area">
   <input type="text" id="input-item" placeholder="O que precisa ser feito?" />
   <button onclick="adicionarItem()">+</button>
+</div>
+
+<div class="prio-seletor" id="prio-seletor">
+  <button class="prio-btn sel-baixa" data-p="baixa" onclick="selecionarPrio('baixa')">🟢 Baixa</button>
+  <button class="prio-btn" data-p="media" onclick="selecionarPrio('media')">🟡 Média</button>
+  <button class="prio-btn" data-p="alta"  onclick="selecionarPrio('alta')">🔴 Alta</button>
 </div>
 
 <div class="lista" id="lista"></div>
@@ -303,15 +353,15 @@
     hoje.getDate() + ' ' + meses[hoje.getMonth()] + ' ' + hoje.getFullYear();
 
   function carregarDados() {
-    try {
-      const s = localStorage.getItem('minhas-listas-v2');
-      if (s) return JSON.parse(s);
-    } catch(e) {}
-    return { tarefas: [], compras: [], trabalho: [] };
+    try { const s = localStorage.getItem('listas-v3'); if (s) return JSON.parse(s); } catch(e) {}
+    return { tarefas:[], compras:[], trabalho:[] };
   }
 
   let dados = carregarDados();
   let abaAtual = 'tarefas';
+  let prioAtual = 'baixa';
+  let expandidos = {};
+  let editando = null;
   let timerToast;
 
   const placeholders = {
@@ -319,9 +369,10 @@
     compras: 'O que precisa comprar?',
     trabalho: 'Qual tarefa de trabalho?'
   };
+  const temPrio = ['tarefas', 'trabalho'];
 
   function salvar() {
-    try { localStorage.setItem('minhas-listas-v2', JSON.stringify(dados)); } catch(e) {}
+    try { localStorage.setItem('listas-v3', JSON.stringify(dados)); } catch(e) {}
     const t = document.getElementById('toast');
     t.classList.add('visivel');
     clearTimeout(timerToast);
@@ -330,18 +381,29 @@
 
   function trocarAba(aba) {
     abaAtual = aba;
+    editando = null;
     document.getElementById('input-item').placeholder = placeholders[aba];
-    document.querySelectorAll('.aba-btn').forEach(b => {
-      b.classList.toggle('ativa', b.dataset.aba === aba);
-    });
+    document.querySelectorAll('.aba-btn').forEach(b => b.classList.toggle('ativa', b.dataset.aba === aba));
+    document.getElementById('prio-seletor').style.display = temPrio.includes(aba) ? 'flex' : 'none';
     renderizar();
+  }
+
+  function selecionarPrio(p) {
+    prioAtual = p;
+    document.querySelectorAll('.prio-btn').forEach(b => {
+      b.className = 'prio-btn' + (b.dataset.p === p ? ' sel-' + p : '');
+    });
   }
 
   function adicionarItem() {
     const input = document.getElementById('input-item');
     const texto = input.value.trim();
     if (!texto) return;
-    dados[abaAtual].push({ texto, feito: false, id: Date.now() });
+    dados[abaAtual].push({
+      texto, feito: false, id: Date.now(),
+      prio: temPrio.includes(abaAtual) ? prioAtual : null,
+      desc: ''
+    });
     input.value = '';
     salvar();
     renderizar();
@@ -349,55 +411,127 @@
   }
 
   function toggleItem(id) {
+    if (editando === id) return;
     const item = dados[abaAtual].find(i => i.id === id);
     if (item) item.feito = !item.feito;
-    salvar();
+    salvar(); renderizar();
+  }
+
+  function toggleExpand(id) {
+    expandidos[id] = !expandidos[id];
     renderizar();
   }
 
-  function removerItem(e, id) {
-    e.stopPropagation();
+  function removerItem(id) {
     dados[abaAtual] = dados[abaAtual].filter(i => i.id !== id);
-    salvar();
+    delete expandidos[id];
+    salvar(); renderizar();
+  }
+
+  function iniciarEdicao(id) {
+    editando = id;
+    expandidos[id] = true;
     renderizar();
+    setTimeout(() => {
+      const f = document.getElementById('edit-' + id);
+      if (f) { f.focus(); f.select(); }
+    }, 50);
+  }
+
+  function salvarEdicao(id) {
+    const f = document.getElementById('edit-' + id);
+    if (!f) return;
+    const texto = f.value.trim();
+    if (texto) {
+      const item = dados[abaAtual].find(i => i.id === id);
+      if (item) item.texto = texto;
+      salvar();
+    }
+    editando = null;
+    renderizar();
+  }
+
+  function cancelarEdicao() { editando = null; renderizar(); }
+
+  function salvarDesc(id) {
+    const el = document.getElementById('desc-' + id);
+    if (!el) return;
+    const item = dados[abaAtual].find(i => i.id === id);
+    if (item) { item.desc = el.value; salvar(); }
   }
 
   function limparConcluidas() {
     dados[abaAtual] = dados[abaAtual].filter(i => !i.feito);
-    salvar();
-    renderizar();
+    salvar(); renderizar();
   }
-
-  const formas = { tarefas: '', compras: ' quadrado', trabalho: ' retangulo' };
 
   function renderizar() {
     const el = document.getElementById('lista');
     const items = dados[abaAtual];
+    const usaPrio = temPrio.includes(abaAtual);
+    const checkClass = abaAtual === 'compras' ? 'check quadrado' : 'check';
 
-    if (items.length === 0) {
-      el.innerHTML = `<p class="vazio">— lista vazia —</p>`;
+    if (!items.length) {
+      el.innerHTML = '<div class="vazio">— lista vazia —<br>Adicione um item acima!</div>';
       return;
     }
 
     const pendentes = items.filter(i => !i.feito).length;
-    const feitaClass = 'feito-' + abaAtual;
 
-    el.innerHTML = items.map(item => `
-      <div class="item ${item.feito ? feitaClass : ''}" onclick="toggleItem(${item.id})">
-        <div class="check${formas[abaAtual]}${item.feito ? ' feito' : ''}">
-          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-            <polyline points="1,4.5 4,7.5 10,1" stroke="#0f0f0f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <span class="item-texto">${item.texto}</span>
-        <div class="remover" onclick="removerItem(event, ${item.id})">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <line x1="2" y1="2" x2="12" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            <line x1="12" y1="2" x2="2" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-        </div>
-      </div>
-    `).join('');
+    el.innerHTML = items.map(item => {
+      const aberto = expandidos[item.id];
+      const editandoEste = editando === item.id;
+
+      const badge = (usaPrio && item.prio)
+        ? `<span class="prio-badge ${item.prio}">${item.prio}</span>` : '';
+
+      const tituloHTML = editandoEste ? '' : `
+        <div class="item-info" onclick="toggleExpand(${item.id})">
+          <div class="item-titulo ${item.feito ? 'riscado' : ''}">${item.texto}</div>
+          ${badge}
+        </div>`;
+
+      const editHTML = editandoEste ? `
+        <div class="item-info">
+          <input class="edit-field" id="edit-${item.id}" value="${item.texto.replace(/"/g,'&quot;')}"
+            onkeydown="if(event.key==='Enter')salvarEdicao(${item.id});if(event.key==='Escape')cancelarEdicao();" />
+          <div class="edit-acoes">
+            <button onclick="salvarEdicao(${item.id})">✓ Salvar</button>
+            <button onclick="cancelarEdicao()">✕ Cancelar</button>
+          </div>
+        </div>` : '';
+
+      const bodyHTML = (aberto && abaAtual !== 'compras') ? `
+        <div class="item-body aberto">
+          <p class="desc-label">descrição</p>
+          <textarea class="desc-field" id="desc-${item.id}"
+            placeholder="Adicione detalhes sobre esta tarefa..."
+            onchange="salvarDesc(${item.id})">${item.desc || ''}</textarea>
+        </div>` : '';
+
+      return `
+        <div class="item">
+          <div class="item-top">
+            <div class="${checkClass}${item.feito ? ' feito' : ''}" onclick="toggleItem(${item.id})">
+              ${item.feito ? '<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><polyline points="1,4 3.5,6.5 9,1" stroke="#7ec87e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ''}
+            </div>
+            ${tituloHTML}${editHTML}
+            <div class="acoes">
+              ${abaAtual !== 'compras' ? `
+              <button class="icon-btn" onclick="iniciarEdicao(${item.id})" title="Editar">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 12l3-1L11.5 3.5a1.5 1.5 0 0 0-2-2L2 9l-1 3z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <button class="icon-btn" onclick="toggleExpand(${item.id})" title="Descrição">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="1" y="1" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.3"/><line x1="3.5" y1="4.5" x2="9.5" y2="4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><line x1="3.5" y1="7" x2="7.5" y2="7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+              </button>` : ''}
+              <button class="icon-btn" onclick="removerItem(${item.id})" title="Remover">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><line x1="1" y1="1" x2="11" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="11" y1="1" x2="1" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+          </div>
+          ${bodyHTML}
+        </div>`;
+    }).join('');
 
     el.innerHTML += `
       <div class="rodape">
