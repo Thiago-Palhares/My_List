@@ -47,11 +47,16 @@
     .input-area button { width: 50px; height: 50px; border-radius: var(--radius); border: none; background: var(--bg3); color: var(--text); font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.1s; flex-shrink: 0; }
     .input-area button:active { transform: scale(0.92); }
 
-    .prio-seletor { display: flex; gap: 8px; padding: 0 24px; margin-bottom: 20px; }
-    .prio-btn { flex: 1; padding: 7px 0; border-radius: 10px; border: 1px solid var(--border); background: transparent; font-size: 12px; cursor: pointer; font-family: 'DM Sans', sans-serif; color: var(--text2); transition: all 0.15s; }
-    .prio-btn.sel-baixa { background: #1a2e1a; border-color: #2e5c2e; color: #7ec87e; }
-    .prio-btn.sel-media { background: #2e2600; border-color: #5c4d00; color: #d4b84a; }
-    .prio-btn.sel-alta  { background: #2e1a1a; border-color: #5c2e2e; color: #c87e7e; }
+    .prio-seletor { display: flex; align-items: center; gap: 10px; padding: 0 24px; margin-bottom: 20px; }
+    .prio-label { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; }
+    .prio-dots { display: flex; gap: 10px; }
+    .prio-dot { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--border2); background: transparent; cursor: pointer; padding: 0; transition: all 0.15s; }
+    .prio-dot[data-p="baixa"] { border-color: #3a5c3a; }
+    .prio-dot[data-p="media"] { border-color: #5c4d1a; }
+    .prio-dot[data-p="alta"]  { border-color: #5c3a3a; }
+    .prio-dot.sel[data-p="baixa"] { background: #7ec87e; border-color: #7ec87e; box-shadow: 0 0 0 3px rgba(126,200,126,0.18); }
+    .prio-dot.sel[data-p="media"] { background: #d4b84a; border-color: #d4b84a; box-shadow: 0 0 0 3px rgba(212,184,74,0.18); }
+    .prio-dot.sel[data-p="alta"]  { background: #c87e7e; border-color: #c87e7e; box-shadow: 0 0 0 3px rgba(200,126,126,0.18); }
 
     .lista { padding: 0 24px; }
     .vazio { text-align: center; color: var(--text3); font-size: 13px; padding: 48px 0; font-family: 'DM Mono', monospace; }
@@ -122,9 +127,12 @@
 </div>
 
 <div class="prio-seletor" id="prio-seletor">
-  <button class="prio-btn sel-baixa" data-p="baixa" onclick="selecionarPrio('baixa')">🟢 Baixa</button>
-  <button class="prio-btn" data-p="media" onclick="selecionarPrio('media')">🟡 Média</button>
-  <button class="prio-btn" data-p="alta" onclick="selecionarPrio('alta')">🔴 Alta</button>
+  <span class="prio-label">prioridade</span>
+  <div class="prio-dots">
+    <button class="prio-dot sel" data-p="baixa" onclick="selecionarPrio('baixa')" title="Baixa"></button>
+    <button class="prio-dot" data-p="media" onclick="selecionarPrio('media')" title="Média"></button>
+    <button class="prio-dot" data-p="alta" onclick="selecionarPrio('alta')" title="Alta"></button>
+  </div>
 </div>
 
 <div class="lista" id="lista"></div>
@@ -167,14 +175,14 @@
 
   function selecionarPrio(p) {
     prioAtual = p;
-    document.querySelectorAll('.prio-btn').forEach(b => { b.className = 'prio-btn' + (b.dataset.p === p ? ' sel-'+p : ''); });
+    document.querySelectorAll('.prio-dot').forEach(b => { b.classList.toggle('sel', b.dataset.p === p); });
   }
 
   function adicionarItem() {
     const input = document.getElementById('input-item');
     const texto = input.value.trim();
     if (!texto) return;
-    dados[abaAtual].push({ texto, feito:false, id:Date.now(), prio: temPrio.includes(abaAtual) ? prioAtual : null, desc:'' });
+    dados[abaAtual].unshift({ texto, feito:false, id:Date.now(), prio: temPrio.includes(abaAtual) ? prioAtual : null, desc:'' });
     input.value = ''; salvar(); renderizar(); input.focus();
   }
 
